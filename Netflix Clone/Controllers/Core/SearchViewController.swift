@@ -30,7 +30,7 @@ class SearchViewController: UIViewController {
 
         view.backgroundColor = .systemBackground
         
-        title = "Upcoming"
+        title = "Search"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationItem.largeTitleDisplayMode = .always
         view.addSubview(searchTable)
@@ -64,7 +64,16 @@ class SearchViewController: UIViewController {
 
 }
 
-extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {
+extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating, SearchResultViewControllerDelegate {
+    
+    func searchResultViewControllerDidTapItem(_ viewModel: TitlePreviewViewModel) {
+        DispatchQueue.main.async { [weak self] in
+            let vc = TitlePreviewViewController()
+            vc.configure(with: viewModel)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
     
     func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
@@ -74,6 +83,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
               let resultsController = searchController.searchResultsController as? SearchResultViewController else {
             return
         }
+        resultsController.delegate = self
         APICaller.shared.search(with: query) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -102,5 +112,26 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource, UISe
         return 140
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let title = titles[indexPath.row]
+        guard let titleName = title.original_title ?? title.original_name else {
+            return
+        }
+        
+        APICaller.shared.getMovie(with: titleName) { [weak self] result in
+            switch result {
+            case .success(let videoElemet):
+                DispatchQueue.main.async {
+                    let vc = TitlePreviewViewController()
+                    vc.configure(with: TitlePreviewViewModel(title: titleName, youtubeVideo: videoElemet, titleOverview: title.overview ?? ""))
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
 
