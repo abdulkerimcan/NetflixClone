@@ -1,5 +1,5 @@
 # Netflix Clone
-I completed this project by watching the YouTube channel called [freeCodeCamp.org]([https://console.cloud.google.com/apis/credentials/](https://www.youtube.com/watch?v=KCgYDCKqato&t=8510s)), where I learned new things and gained knowledge.
+I completed this project by watching the YouTube channel called [freeCodeCamp.org](https://www.youtube.com/watch?v=KCgYDCKqato&t=8510s), where I learned new things and gained knowledge.
 Netflix Clone is a mobile application built using swift that aims to replicate the popular streaming platform, Netflix. It allows users to browse and watch movies, TV shows.
 
 ![Ekran_Kaydı_2023-07-02_19_55_17_AdobeExpress](https://github.com/abdulkerimcan/NetflixClone/assets/79968953/6f7892f4-92b8-43e3-8a2a-f1fa274f18c9)
